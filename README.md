@@ -2,6 +2,8 @@
 
 Uses [BitCracker](https://github.com/e-ago/bitcracker) with a GPU to brute-force BitLocker recovery passwords.
 
+> **Disclaimer:** This tool is intended solely for recovering access to your own BitLocker-encrypted drives. Do not use it on drives you do not own or have explicit permission to access.
+
 ---
 
 ## Requirements
@@ -19,10 +21,10 @@ You must build `bitcracker_cuda` yourself from the BitCracker source.
 
 ```bash
 git clone https://github.com/e-ago/bitcracker.git
-cd bitcracker/src
+cd bitcracker
 ```
 
-Before building, edit the `Makefile` to match your GPU's compute capability:
+Before building, edit the `src_CUDA/Makefile` to match your GPU's compute capability:
 
 | GPU Series | Example Models | CUDA Arch Flag |
 |---|---|---|
@@ -44,10 +46,10 @@ In the `Makefile`, find the line with `-gencode` and change it to match your GPU
 Then build:
 
 ```bash
-make
+./build.sh
 ```
 
-Copy the resulting `bitcracker_cuda` binary into the same folder as `main.py`.
+Copy the resulting `/build/bitcracker_cuda` binary into the same folder as `main.py`.
 
 ---
 
@@ -89,6 +91,36 @@ python3 main.py --hash-file hash_recv_pass.txt --start 21564736
 | `--gpu` | `0` | GPU device ID (`-g`) |
 
 > **Note:** The default values for `--threads` and `--blocks` are tuned for an **RTX 3060 Ti** (38 multiprocessors, `sm_86`). If you have a different GPU, adjust `--blocks` to match its multiprocessor count and update the CUDA arch flag accordingly.
+
+---
+
+## Performance
+
+Tested on an **RTX 3060 Ti** with default settings (`--threads 8 --blocks 38 --chunk-size 100000`):
+
+| Metric | Value |
+|---|---|
+| Passwords per batch | 100,000 |
+| Total keyspace | ~282 billion valid candidates |
+| Speed | varies by CUDA config — tune `--threads` and `--blocks` for your GPU |
+
+> **Tip:** Increase `--chunk-size` if your GPU has enough VRAM to improve throughput.
+
+---
+
+## Troubleshooting
+
+**`make` fails with `unsupported gpu architecture`**
+— Your `-gencode` flag doesn't match your GPU. Check the table in Step 1 and update the `Makefile`.
+
+**`bitcracker_cuda: not found`**
+— Make sure the binary is in the same folder as `main.py`, not left in `bitcracker/build/`.
+
+**`nvcc: command not found`**
+— CUDA Toolkit is not installed or not in your `PATH`. Install it from the [NVIDIA CUDA Toolkit page](https://developer.nvidia.com/cuda-downloads).
+
+**Hash extraction fails**
+— Ensure your image/drive is BitLocker-encrypted with a recovery password (not just a PIN or startup key). TPM-only encryption does not use a recovery password.
 
 ---
 
