@@ -58,10 +58,37 @@ Copy the resulting `/build/bitcracker_cuda` binary into the same folder as `main
 Use `bitcracker_hash` (also built from BitCracker source) to extract the hash from your BitLocker-encrypted drive or image:
 
 ```bash
-./bitcracker_hash -o hash_recv_pass.txt -i /path/to/image.img
+/build/bitcracker_hash -o hash_recv_pass.txt -i /path/to/image.img
 ```
 
-Place `hash_recv_pass.txt` in the same folder as `main.py`.
+Example output:
+
+```
+---------> BitCracker Hash Extractor <---------
+Opening file ./Images/imgWin7
+
+Signature found at 0x02208000
+Version: 2 (Windows 7 or later)
+
+VMK entry found at 0x022080bc
+VMK encrypted with user password found!
+VMK encrypted with AES-CCM
+
+VMK entry found at 0x0220819c
+VMK encrypted with Recovery key found!
+VMK encrypted with AES-CCM
+
+User Password hash:
+$bitlocker$0$16$89a5bad722db4a729d3c7b9ee8e76a29$1048576$12$304a4ac192a2cf0103000000$60$24de9a6128e8f8ffb97ac72d21de40f63dbc44acf101e68ac0f7e52ecb1be4a8ee30ca1e69fbe98400707ba3977d5f09b14e388c885f312edc5c85c2
+
+Recovery Key hash:
+$bitlocker$2$16$8b7be4f7802275ffbdad3766c7f7fa4a$1048576$12$304a4ac192a2cf0106000000$60$6e72f6ef6ba688e72211b8cf8cc722affd308882965dc195f85614846f5eb7d9037d4d63bcc1d6e904f0030cf2e3a95b3e1067447b089b7467f86688
+
+Output file for user password attack: "hash_user_pass.txt"
+Output file for recovery password attack: "hash_recv_pass.txt"
+```
+
+> **Note:** This tool generates two hash files. This script uses `hash_recv_pass.txt` (recovery password attack). Place it in the same folder as `main.py`.
 
 ---
 
