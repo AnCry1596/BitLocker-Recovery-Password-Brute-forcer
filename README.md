@@ -88,6 +88,8 @@ python3 main.py --hash-file hash_recv_pass.txt --start 21564736
 | `--blocks` | `38` | CUDA blocks (`-b`) — set to your GPU's multiprocessor count |
 | `--gpu` | `0` | GPU device ID (`-g`) |
 
+> **Note:** The default values for `--threads` and `--blocks` are tuned for an **RTX 3060 Ti** (38 multiprocessors, `sm_86`). If you have a different GPU, adjust `--blocks` to match its multiprocessor count and update the CUDA arch flag accordingly.
+
 ---
 
 ## License
