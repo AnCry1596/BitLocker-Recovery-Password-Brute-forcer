@@ -106,12 +106,27 @@ When interrupted, the script prints a resume index. Use it to continue:
 python3 main.py --hash-file hash_recv_pass.txt --start 21564736
 ```
 
+### Revert mode (last key to first)
+
+To run from the very last valid key down to the first, use:
+
+```bash
+python3 main.py --hash-file hash_recv_pass.txt --revert
+```
+
+You can also resume in reverse mode from a specific index:
+
+```bash
+python3 main.py --hash-file hash_recv_pass.txt --revert --start 282574488338432
+```
+
 ### Options
 
 | Argument | Default | Description |
 |---|---|---|
 | `--hash-file` | `hash_recv_pass.txt` | Hash file extracted by `bitcracker_hash` |
-| `--start` | `0` | Resume from this index |
+| `--start` | `0` (normal) / `last key` (`--revert`) | Resume from this index |
+| `--revert` | off | Run in reverse order (from last key to first) |
 | `--chunk-size` | `100000` | Passwords per GPU batch |
 | `--threads` | `8` | CUDA threads (`-t`) |
 | `--blocks` | `38` | CUDA blocks (`-b`) — set to your GPU's multiprocessor count |
